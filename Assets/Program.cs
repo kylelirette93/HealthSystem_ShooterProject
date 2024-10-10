@@ -58,6 +58,12 @@ public class HealthSystem
 
     public void TakeDamage(int damage)
     {
+        // Prevent negative damage input
+        if (damage < 0)
+        {
+            damage = 0;
+        }
+
         if (damage > shield)
         {
             // Remaining damage after the shield absorbs damage
@@ -76,27 +82,46 @@ public class HealthSystem
             // Clamp the shield so it stays in range
             shield = Math.Clamp(shield, 0, maxShield);
         }
+
+        if (health == 0 && lives > 0)
+        {
+            Revive();
+        }
     }
 
 
     public void Heal(int hp)
     {
+        // Prevent negative healing input
+        if (hp <= 0)
+        {
+            hp = 0;
+        }
         // Take the value of health after hp has been added and clamp it
-        health = Math.Clamp(health + hp, 0, maxHealth);
+        health += hp;
+        health = Math.Clamp(health, 0, maxHealth);
     }
 
     public void RegenerateShield(int hp)
     {
+        // Prevent negative regen values
+        if (hp <= 0)
+        {
+            hp = 0; 
+        }
         // Clamp the shield just like health
-        shield = Math.Clamp(shield + hp, 0, maxShield);
+        shield += hp;
+        shield = Math.Clamp(shield, 0, maxShield);
     }
 
     public void Revive()
     {
-        health = maxHealth;
-        shield = maxShield;
-        lives--;
         
+        Heal(100);
+        RegenerateShield(100);
+        lives--;
+
+
         if (lives <= 0)
         {
             // Game Over.

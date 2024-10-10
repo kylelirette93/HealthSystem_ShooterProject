@@ -18,7 +18,6 @@ public class Player : Actor {
     {
         base.Die();
         gameObject.SetActive(false);
-        healthSystem.Revive();
     }
 
     public override void Update() {

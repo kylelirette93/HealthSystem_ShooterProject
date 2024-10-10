@@ -52,7 +52,7 @@ public class Actor : MonoBehaviour
 
     public virtual void Die()
     {
-        
+
     }
 
     public virtual Vector3 ShootDirection()
