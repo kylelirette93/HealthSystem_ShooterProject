@@ -24,6 +24,19 @@ public class HealthSystemTests : MonoBehaviour
         Test_Heal_NormalHealing();
         Test_Heal_AlreadyMaxHealth();
         Test_Heal_NegativeInput();
+
+        // Regenerate Shield Tests
+        Test_RegenerateShield_Regeneration();
+        Test_RegenerateShield_MaxShield();
+        Test_RegenerateShield_NegativeInput();
+
+        // Revive Test
+        Test_Revive();
+
+        // XP Tests
+        Test_IncreaseXP_Add();
+        Test_IncreaseXP_Max();
+        Test_IncreaseXP_NegativeInput();
     }
 
     public void Test_TakeDamage_OnlyShield()
@@ -160,5 +173,97 @@ public class HealthSystemTests : MonoBehaviour
         Debug.Assert(100 == system.shield, "Shield should not reduce");
         Debug.Assert(100 == system.health, "Health should not reduce");
         Debug.Assert(3 == system.lives, "Lives should not reduce");
+    }
+
+    public void Test_RegenerateShield_Regeneration()
+    {
+        HealthSystem system = new HealthSystem();
+        system.shield = 80;
+        system.health = 100;
+        system.lives = 3;
+
+        system.RegenerateShield(20);
+
+        Debug.Assert(100 == system.shield);
+        Debug.Assert(100 == system.health);
+        Debug.Assert(3 == system.lives);
+    }
+
+    public void Test_RegenerateShield_MaxShield()
+    {
+        HealthSystem system = new HealthSystem();
+        system.shield = 100;
+        system.health = 100;
+        system.lives = 3;
+
+        system.RegenerateShield(20);
+
+        Debug.Assert(100 == system.shield);
+        Debug.Assert(100 == system.health);
+        Debug.Assert(3 == system.lives);
+    }
+
+    public void Test_RegenerateShield_NegativeInput()
+    {
+        HealthSystem system = new HealthSystem();
+        system.shield = 100;
+        system.health = 100;
+        system.lives = 3;
+
+        system.RegenerateShield(-20);
+
+        Debug.Assert(100 == system.shield);
+        Debug.Assert(100 == system.health);
+        Debug.Assert(3 == system.lives);
+    }
+
+    public void Test_Revive()
+    {
+        HealthSystem system = new HealthSystem();
+        system.shield = 0;
+        system.health = 0;
+        system.lives = 3;
+
+        system.Revive();
+
+        Debug.Assert(100 == system.shield);
+        Debug.Assert(100 == system.health);
+        Debug.Assert(2 == system.lives);
+    }
+
+    public void Test_IncreaseXP_Add()
+    {
+        HealthSystem system = new HealthSystem();
+        system.level = 1;
+        system.xp = 0;
+
+        system.IncreaseXP(100);
+
+        Debug.Assert(2 == system.level);
+        Debug.Assert(0 == system.xp);
+    }
+
+    public void Test_IncreaseXP_Max()
+    {
+        HealthSystem system = new HealthSystem();
+        system.level = 1;
+        system.xp = 80;
+
+        system.IncreaseXP(40);
+
+        Debug.Assert(2 == system.level);
+        Debug.Assert(20 == system.xp);
+    }
+
+    public void Test_IncreaseXP_NegativeInput()
+    {
+        HealthSystem system = new HealthSystem();
+        system.level = 1;
+        system.xp = 0;
+
+        system.IncreaseXP(-20);
+
+        Debug.Assert(1 == system.level);
+        Debug.Assert(0 == system.xp);
     }
 }

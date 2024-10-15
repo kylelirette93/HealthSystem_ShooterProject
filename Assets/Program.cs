@@ -129,25 +129,33 @@ public class HealthSystem
         level = 1;
     }
 
-    // Optional XP system methods
+ 
     public void IncreaseXP(int exp)
     {
         // Add the powerup xp to total xp
         xp += exp;
 
-        // Calculate the required xp, it will grow exponentially
-        // based on the current level
-        requiredXP = (int)(Math.Pow(2, level) * exp);
+        if (xp < 0)
+        {
+            xp = 0;
+        }
+
+        // Level will increment every 100xp
+        requiredXP = 100;
 
         // Check if total xp is greater than the required xp
-        while (xp >= requiredXP)
+        while (xp >= requiredXP && level < 99)
         {
             level++;
-            // Keeps track of how much xp is left after leveling up
-            xp -= requiredXP;
 
-            // Recalculate required xp for the next level
-            requiredXP = (int)(Math.Pow(2, level) * exp);
+            // Keeps track of how much xp is left after leveling
+            xp -= requiredXP;
+        }
+
+        if (level >= 99)
+        {
+            level = 99;
+            xp = 0;
         }
     }
 }
