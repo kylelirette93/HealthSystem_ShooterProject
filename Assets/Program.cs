@@ -10,36 +10,24 @@ public class HealthSystem
     public int shield;
     const int maxShield = 100;
     public int lives;
+    public int requiredXP = 100;
     
 
     // Optional XP system variables
-    public int xp;
-    public int level;
+    public int xp = 0;
+    public int level = 1;
 
 
     public string HealthStatus(int hp)
     {
-        if (health > 90)
+        return hp switch
         {
-            return "Perfect Health";
-        }
-        else if (health > 75)
-        {
-            return "Healthy";
-        }
-        else if (health > 50)
-        {
-            return "Hurt";
-        }
-        else if (health > 25)
-        {
-            return "Badly Hurt";
-        }
-        else
-        {
-            return "Imminent Danger";
-        }
-
+            > 90 => "Perfect Health",
+            > 75 => "Healthy",
+            > 50 => "Hurt",
+            > 25 => "Badly Hurt",
+            _ => "Imminent Danger",
+        };
     }
     public HealthSystem()
     {
@@ -53,7 +41,10 @@ public class HealthSystem
         return $"Health: {health}" +
             $"\nShield: {shield}" +
             $"\nLives: {lives}" +
-            $"\nHealth Status: {healthStatus} ";
+            $"\nHealth Status: {healthStatus}" +
+            $"\nLevel: {level}" +
+            $"\nXP: {xp}" +
+            $"\nRequired XP to Level up: {requiredXP}";
     }
 
     public void TakeDamage(int damage)
@@ -72,6 +63,11 @@ public class HealthSystem
             shield = 0;
             health -= remainingDamage;
 
+            if (health <= 0)
+            {
+                Revive();
+            }
+
             // Clamp the health so it stays in range
             health = Math.Clamp(health, 0, maxHealth);
         }
@@ -81,11 +77,6 @@ public class HealthSystem
 
             // Clamp the shield so it stays in range
             shield = Math.Clamp(shield, 0, maxShield);
-        }
-
-        if (health == 0 && lives > 0)
-        {
-            Revive();
         }
     }
 
@@ -115,8 +106,7 @@ public class HealthSystem
     }
 
     public void Revive()
-    {
-        
+    {       
         Heal(100);
         RegenerateShield(100);
         lives--;
@@ -135,11 +125,29 @@ public class HealthSystem
         health = maxHealth;
         shield = maxShield;
         lives = 3;
+        xp = 0;
+        level = 1;
     }
 
     // Optional XP system methods
     public void IncreaseXP(int exp)
     {
-        // Implement XP increase and level-up logic
+        // Add the powerup xp to total xp
+        xp += exp;
+
+        // Calculate the required xp, it will grow exponentially
+        // based on the current level
+        requiredXP = (int)(Math.Pow(2, level) * exp);
+
+        // Check if total xp is greater than the required xp
+        while (xp >= requiredXP)
+        {
+            level++;
+            // Keeps track of how much xp is left after leveling up
+            xp -= requiredXP;
+
+            // Recalculate required xp for the next level
+            requiredXP = (int)(Math.Pow(2, level) * exp);
+        }
     }
 }

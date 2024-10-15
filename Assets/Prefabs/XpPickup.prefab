@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba1067b5c6ecb12428c3d883175160a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XpToIncrease: 20
+  myType: 2
+  AmountToIncrease: 100
 --- !u!135 &7651879767558168022
 SphereCollider:
   m_ObjectHideFlags: 0
