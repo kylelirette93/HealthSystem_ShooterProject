@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics;
-using Unity.PlasticSCM.Editor.WebApi;
+
 public class HealthSystem
 {
     // Variables
@@ -9,7 +9,16 @@ public class HealthSystem
     public string healthStatus;
     public int shield;
     const int maxShield = 100;
-    public int lives;
+    private int _lives;
+    public int lives
+    {
+        get { return _lives; }
+        set
+        {
+            UnityEngine.Debug.Log($"Lives was {_lives} now changing it to {value}");
+            _lives = value;
+        }
+    }
     public int requiredXP = 100;
     
 
@@ -55,6 +64,7 @@ public class HealthSystem
             damage = 0;
         }
 
+
         if (damage > shield)
         {
             // Remaining damage after the shield absorbs damage
@@ -63,20 +73,22 @@ public class HealthSystem
             shield = 0;
             health -= remainingDamage;
 
-            if (health <= 0)
-            {
-                Revive();
-            }
-
             // Clamp the health so it stays in range
             health = Math.Clamp(health, 0, maxHealth);
         }
+
+        
         else
         {
             shield -= damage;
 
             // Clamp the shield so it stays in range
             shield = Math.Clamp(shield, 0, maxShield);
+        }
+
+        if (health <= 0 && lives > 0)
+        {
+            Revive();
         }
     }
 
@@ -110,13 +122,6 @@ public class HealthSystem
         Heal(100);
         RegenerateShield(100);
         lives--;
-
-
-        if (lives <= 0)
-        {
-            // Game Over.
-            ResetGame();
-        }
     }
 
     public void ResetGame()

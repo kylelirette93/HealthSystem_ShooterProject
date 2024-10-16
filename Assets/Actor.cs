@@ -13,13 +13,14 @@ public class Actor : MonoBehaviour
 
     int lastCheckingForDeath = 0;
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
         healthSystem.ResetGame();
         charControl = gameObject.GetComponent<CharacterController>();
     }
 
-    public void ShootProjectile() {
+    public void ShootProjectile()
+    {
         var newProjectile = GameObject.Instantiate(prefabProjectile);
         newProjectile.transform.position = transform.position + (Vector3.up * 0.45f) + (ShootDirection() * 0.35f);
         newProjectile.transform.forward = ShootDirection();
@@ -32,11 +33,13 @@ public class Actor : MonoBehaviour
 
         charControl.Move(desiredMovement.normalized * speed * Time.deltaTime);
 
-        if (Mathf.Abs(desiredMovement.magnitude) > 0.1f) {
+        if (Mathf.Abs(desiredMovement.magnitude) > 0.1f)
+        {
             visual.transform.forward = Vector3.Lerp(visual.transform.forward, GetLookDirection(), Time.deltaTime * 24.0f);
         }
 
-        if (WantsToShoot()) {
+        if (WantsToShoot())
+        {
             ShootProjectile();
         }
 

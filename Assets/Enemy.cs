@@ -1,18 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class Enemy : Actor {
+public class Enemy : Actor
+{
     public static List<Enemy> allEnemies = new List<Enemy>();
 
     public List<GameObject> itemDrops = new List<GameObject>();
     float shootInterval = 1.5f;
 
-    private void OnEnable() {
+    private void OnEnable()
+    {
         allEnemies.Add(this);
     }
 
-    private void OnDisable() {
+    public override void Start()
+    {
+        base.Start();
+        healthSystem.lives = 0;
+    }
+
+    private void OnDisable()
+    {
         allEnemies.Remove(this);
     }
 
@@ -28,7 +38,8 @@ public class Enemy : Actor {
         if (healthSystem.health <= 0)
             return false;
         shootInterval -= Time.deltaTime;
-        if (shootInterval < 0.0f) {
+        if (shootInterval < 0.0f)
+        {
             shootInterval = UnityEngine.Random.Range(0.7f, 1.7f);
             return true;
         }
