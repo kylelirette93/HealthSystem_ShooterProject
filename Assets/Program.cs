@@ -15,7 +15,6 @@ public class HealthSystem
         get { return _lives; }
         set
         {
-            UnityEngine.Debug.Log($"Lives was {_lives} now changing it to {value}");
             _lives = value;
         }
     }
@@ -58,12 +57,13 @@ public class HealthSystem
 
     public void TakeDamage(int damage)
     {
+        UnityEngine.Debug.Log("Health and Shield before taking damage:" +
+            "Health: " + health + "Shield: " + shield);
         // Prevent negative damage input
         if (damage < 0)
         {
             damage = 0;
         }
-
 
         if (damage > shield)
         {
@@ -71,13 +71,14 @@ public class HealthSystem
             int remainingDamage = damage - shield;
             // Shield should be fully depleted
             shield = 0;
+            UnityEngine.Debug.Log("Health and shield status now that " +
+                "shield is depleted: " + "Health: " + health + " Shield: " + shield);
             health -= remainingDamage;
 
             // Clamp the health so it stays in range
             health = Math.Clamp(health, 0, maxHealth);
         }
-
-        
+      
         else
         {
             shield -= damage;
@@ -86,8 +87,12 @@ public class HealthSystem
             shield = Math.Clamp(shield, 0, maxShield);
         }
 
+        UnityEngine.Debug.Log("Health and Shield after taking damage:" +
+            "Health: " + health + "Shield: " + shield);
+
         if (health <= 0 && lives > 0)
         {
+            UnityEngine.Debug.Log("Revive function is called.");
             Revive();
         }
     }
@@ -100,8 +105,10 @@ public class HealthSystem
         {
             hp = 0;
         }
+        UnityEngine.Debug.Log("Health before healing: " + health);
         // Take the value of health after hp has been added and clamp it
         health += hp;
+        UnityEngine.Debug.Log("Health after healing: " + health);
         health = Math.Clamp(health, 0, maxHealth);
     }
 
@@ -113,7 +120,9 @@ public class HealthSystem
             hp = 0; 
         }
         // Clamp the shield just like health
+        UnityEngine.Debug.Log("Shield before regenerating: " + shield);
         shield += hp;
+        UnityEngine.Debug.Log("Shield after regenerating: " + shield);
         shield = Math.Clamp(shield, 0, maxShield);
     }
 
@@ -134,11 +143,15 @@ public class HealthSystem
         level = 1;
     }
 
- 
+
     public void IncreaseXP(int exp)
     {
         // Add the powerup xp to total xp
+        UnityEngine.Debug.Log("Current XP before adding xp: " + xp);
+        UnityEngine.Debug.Log("Before XP is added, " +
+                "player level is: " + level);
         xp += exp;
+        UnityEngine.Debug.Log("XP before resetting: " + xp);
 
         if (xp < 0)
         {
@@ -151,10 +164,13 @@ public class HealthSystem
         // Check if total xp is greater than the required xp
         while (xp >= requiredXP && level < 99)
         {
+            UnityEngine.Debug.Log("After XP has been added, " +
+                "player level is now: " + level);
             level++;
 
             // Keeps track of how much xp is left after leveling
             xp -= requiredXP;
+            UnityEngine.Debug.Log("XP after resetting: " + xp);
         }
 
         if (level >= 99)
